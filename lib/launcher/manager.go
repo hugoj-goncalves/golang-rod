@@ -1,6 +1,7 @@
 package launcher
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -181,7 +182,8 @@ func (m *Manager) launch(w http.ResponseWriter, r *http.Request) {
 
 	// Always enable leakless so that if the Manager process crashes
 	// all the managed browsers will be killed.
-	u := l.Leakless(true).MustLaunch()
+	ctx := context.Background()
+	u := l.Leakless(true).MustLaunch(ctx)
 	defer m.cleanup(l, kill)
 
 	parsedURL, err := url.Parse(u)

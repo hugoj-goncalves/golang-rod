@@ -1,6 +1,7 @@
 package rod_test
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -14,9 +15,10 @@ import (
 )
 
 func TestMonitor(t *testing.T) {
+	ctx := context.Background()
 	g := setup(t)
 
-	b := rod.New().MustConnect()
+	b := rod.New().MustConnect(ctx)
 	defer b.MustClose()
 	p := b.MustPage(g.blank()).MustWaitLoad()
 
@@ -39,14 +41,16 @@ func TestMonitor(t *testing.T) {
 }
 
 func TestMonitorErr(t *testing.T) {
+	ctx := context.Background()
+
 	g := setup(t)
 
 	l := launcher.New()
-	u := l.MustLaunch()
+	u := l.MustLaunch(ctx)
 	defer l.Kill()
 
 	g.Panic(func() {
-		rod.New().Monitor("abc").ControlURL(u).MustConnect()
+		rod.New().Monitor("abc").ControlURL(u).MustConnect(ctx)
 	})
 }
 

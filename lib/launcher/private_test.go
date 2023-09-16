@@ -1,6 +1,7 @@
 package launcher
 
 import (
+	"context"
 	"fmt"
 	"net/url"
 	"os"
@@ -122,10 +123,11 @@ func TestManaged(t *testing.T) {
 }
 
 func TestLaunchErrs(t *testing.T) {
+	ctx := context.Background()
 	g := setup(t)
 
 	l := New().Bin("echo")
-	_, err := l.Launch()
+	_, err := l.Launch(ctx)
 	g.Err(err)
 
 	s := g.Serve()
@@ -134,7 +136,7 @@ func TestLaunchErrs(t *testing.T) {
 	l.browser.Logger = utils.LoggerQuiet
 	l.browser.RootDir = filepath.Join("tmp", "browser-from-mirror", g.RandStr(16))
 	l.browser.Hosts = []Host{HostTest(s.URL())}
-	_, err = l.Launch()
+	_, err = l.Launch(ctx)
 	g.Err(err)
 }
 

@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"io/ioutil"
 	"log"
 
@@ -9,9 +10,10 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
 	u := "https://avatars.githubusercontent.com/u/33149672"
 
-	browser := rod.New().MustConnect()
+	browser := rod.New().MustConnect(ctx)
 
 	page := browser.MustPage(u).MustWaitLoad()
 

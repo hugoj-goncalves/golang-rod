@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/go-rod/rod"
@@ -9,12 +10,13 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
 	l := launcher.New()
 
 	// For more info: https://pkg.go.dev/github.com/go-rod/rod/lib/launcher
-	u := l.MustLaunch()
+	u := l.MustLaunch(ctx)
 
-	browser := rod.New().ControlURL(u).MustConnect()
+	browser := rod.New().ControlURL(u).MustConnect(ctx)
 
 	page := browser.MustPage("http://example.com")
 

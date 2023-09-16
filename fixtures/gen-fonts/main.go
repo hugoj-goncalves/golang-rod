@@ -6,6 +6,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 
@@ -15,8 +16,9 @@ import (
 )
 
 func main() {
-	url := launcher.New().MustLaunch()
-	b := rod.New().ControlURL(url).MustConnect()
+	ctx := context.Background()
+	url := launcher.New().MustLaunch(ctx)
+	b := rod.New().ControlURL(url).MustConnect(ctx)
 	defer b.MustClose()
 
 	p := b.MustPage("https://translate.google.com/")

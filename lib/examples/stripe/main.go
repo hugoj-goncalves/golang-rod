@@ -3,6 +3,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"io/ioutil"
 	"net/http"
 
@@ -12,7 +13,8 @@ import (
 
 // An example to handle stripe 3DS callback.
 func main() {
-	page := rod.New().MustConnect().MustPage(getRedirectURL())
+	ctx := context.Background()
+	page := rod.New().MustConnect(ctx).MustPage(getRedirectURL())
 
 	// Get the button from the nested iframes
 	frame01 := page.MustElement("div iframe").MustFrame()

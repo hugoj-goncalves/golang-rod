@@ -2,12 +2,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/go-rod/rod"
 )
 
 func main() {
-	rod.New().MustConnect().MustPage("https://www.google.com/").MustWaitLoad().MustPDF("sample.pdf")
+	ctx := context.Background()
+	rod.New().MustConnect(ctx).MustPage("https://www.google.com/").MustWaitLoad().MustPDF("sample.pdf")
 	fmt.Println("wrote sample.pdf")
 }

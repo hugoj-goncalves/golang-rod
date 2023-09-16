@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -13,9 +14,10 @@ import (
 
 // This example demonstrates how to set a HTTP header on requests.
 func main() {
+	ctx := context.Background()
 	host := headerServer()
 
-	page := rod.New().MustConnect().MustPage(host)
+	page := rod.New().MustConnect(ctx).MustPage(host)
 
 	page.MustSetExtraHeaders("X-Header", "my request header")
 	page.MustNavigate(host)

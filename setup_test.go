@@ -105,11 +105,12 @@ func newTesterPool() TesterPool {
 
 // new tester
 func (tp TesterPool) new() *G {
-	u := launcher.New().Set("proxy-bypass-list", "<-loopback>").MustLaunch()
+	ctx := context.Background()
+	u := launcher.New().Set("proxy-bypass-list", "<-loopback>").MustLaunch(ctx)
 
 	mc := newMockClient(u)
 
-	browser := rod.New().Client(mc).MustConnect().MustIgnoreCertErrors(false)
+	browser := rod.New().Client(mc).MustConnect(ctx).MustIgnoreCertErrors(false)
 
 	pages := browser.MustPages()
 

@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/go-rod/rod"
@@ -11,7 +12,8 @@ import (
 // Note: `this` in the eval function will refer to the element that Eval is
 // called  on. This can be useful for things such as blurring elements.
 func main() {
-	res := rod.New().MustConnect().
+	ctx := context.Background()
+	res := rod.New().MustConnect(ctx).
 		MustPage("https://www.google.com/").
 		MustElement(`input`).
 		MustEval("() => Object.keys(window)")

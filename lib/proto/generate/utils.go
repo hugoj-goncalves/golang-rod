@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -17,7 +18,8 @@ func getSchema() gson.JSON {
 	l := launcher.New().Bin(launcher.NewBrowser().MustGet())
 	defer l.Kill()
 
-	u := l.MustLaunch()
+	ctx := context.Background()
+	u := l.MustLaunch(ctx)
 	parsed, err := url.Parse(u)
 	utils.E(err)
 	parsed.Scheme = "http"

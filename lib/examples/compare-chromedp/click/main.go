@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"time"
 
@@ -10,8 +11,9 @@ import (
 
 // This example demonstrates how to use a selector to click on an element.
 func main() {
+	ctx := context.Background()
 	page := rod.New().
-		MustConnect().
+		MustConnect(ctx).
 		Trace(true). // log useful info about what rod is doing
 		Timeout(15 * time.Second).
 		MustPage("https://pkg.go.dev/time/")

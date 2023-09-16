@@ -2,12 +2,15 @@
 package main
 
 import (
+	"context"
+
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/devices"
 )
 
 func main() {
-	page := rod.New().MustConnect().MustPage()
+	ctx := context.Background()
+	page := rod.New().MustConnect(ctx).MustPage()
 
 	// emulate iPhone 7 landscape
 	err := page.Emulate(devices.IPhone6or7or8.Landscape())

@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"strings"
 
@@ -10,7 +11,8 @@ import (
 
 // This example demonstrates  how to extract text from a specific element.
 func main() {
-	page := rod.New().MustConnect().MustPage("https://pkg.go.dev/time")
+	ctx := context.Background()
+	page := rod.New().MustConnect(ctx).MustPage("https://pkg.go.dev/time")
 
 	res := page.MustElement("#pkg-overview").MustParent().MustText()
 	log.Println(strings.TrimSpace(res))

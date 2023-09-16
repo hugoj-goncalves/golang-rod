@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/go-rod/rod"
@@ -19,7 +20,8 @@ func main() {
 // Put your code here, press Ctrl+C when you feel the program is hanging.
 // Read each goroutine's stack that is related to your own code logic.
 func yourCodeHere() {
-	page := rod.New().MustConnect().MustPage("http://mdn.dev")
+	ctx := context.Background()
+	page := rod.New().MustConnect(ctx).MustPage("http://mdn.dev")
 	go page.MustElement("not-exists")
 }
 

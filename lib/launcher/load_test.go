@@ -50,7 +50,7 @@ func BenchmarkManager(b *testing.B) {
 
 			l := launcher.MustNewManaged("")
 			u, h := l.ClientHeader()
-			browser := rod.New().Client(cdp.MustStartWithURL(ctx, u, h)).MustConnect()
+			browser := rod.New().Client(cdp.MustStartWithURL(ctx, u, h)).MustConnect(ctx)
 			page := browser.MustPage()
 			wait := page.MustWaitNavigation()
 			page.MustNavigate(s.URL())

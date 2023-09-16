@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"strings"
 
@@ -11,7 +12,8 @@ import (
 
 // This example demonstrates how to fill out and submit a form.
 func main() {
-	page := rod.New().MustConnect().MustPage("https://github.com/search")
+	ctx := context.Background()
+	page := rod.New().MustConnect(ctx).MustPage("https://github.com/search")
 
 	page.MustElement(`input[name=q]`).MustWaitVisible().MustInput("chromedp").MustType(input.Enter)
 

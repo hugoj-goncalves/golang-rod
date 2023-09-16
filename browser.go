@@ -144,12 +144,12 @@ func (b *Browser) NoDefaultDevice() *Browser {
 
 // Connect to the browser and start to control it.
 // If fails to connect, try to launch a local browser, if local browser not found try to download one.
-func (b *Browser) Connect() error {
+func (b *Browser) Connect(ctx context.Context) error {
 	if b.client == nil {
 		u := b.controlURL
 		if u == "" {
 			var err error
-			u, err = launcher.New().Context(b.ctx).Launch()
+			u, err = launcher.New().Context(b.ctx).Launch(ctx)
 			if err != nil {
 				return err
 			}

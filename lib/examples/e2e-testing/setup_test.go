@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"testing"
 
 	"github.com/go-rod/rod"
@@ -18,7 +19,8 @@ type G struct {
 
 // setup for tests.
 var setup = func() func(t *testing.T) G {
-	browser := rod.New().MustConnect()
+	ctx := context.Background()
+	browser := rod.New().MustConnect(ctx)
 
 	return func(t *testing.T) G {
 		t.Parallel() // run each test concurrently

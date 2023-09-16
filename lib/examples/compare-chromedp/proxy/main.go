@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,6 +14,7 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
 	p := httptest.NewServer(newProxy())
 	defer p.Close()
 
@@ -21,9 +23,10 @@ func main() {
 	}))
 	defer s.Close()
 
-	url := launcher.New().Proxy(p.URL).Set("proxy-bypass-list", "<-loopback>").MustLaunch()
+	ctx := context.Background()
+	url := launcher.New().Proxy(p.URL).Set("proxy-bypass-list", "<-loopback>").MustLaunch(ctx)
 
-	browser := rod.New().ControlURL(url).MustConnect()
+	browser := rod.New().ControlURL(url).MustConnect(ctx)
 	defer browser.MustClose()
 
 	browser.MustIgnoreCertErrors(true)

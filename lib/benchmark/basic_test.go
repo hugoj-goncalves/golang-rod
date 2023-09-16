@@ -4,6 +4,7 @@
 package main_test
 
 import (
+	"context"
 	"path/filepath"
 	"testing"
 
@@ -14,6 +15,7 @@ import (
 )
 
 func BenchmarkCleanup(b *testing.B) {
+	ctx := context.Background()
 	u := got.New(b).Serve().Route("/", "", "page body").URL("/")
 
 	b.RunParallel(func(pb *testing.PB) {
@@ -21,9 +23,9 @@ func BenchmarkCleanup(b *testing.B) {
 			launch := launcher.New().UserDataDir(filepath.Join("tmp", "cleanup", utils.RandString(8)))
 			b.Cleanup(launch.Cleanup)
 
-			url := launch.MustLaunch()
+			url := launch.MustLaunch(ctx)
 
-			browser := rod.New().ControlURL(url).MustConnect()
+			browser := rod.New().ControlURL(url).MustConnect(ctx)
 			b.Cleanup(browser.MustClose)
 
 			browser.MustPage(u).MustClose()

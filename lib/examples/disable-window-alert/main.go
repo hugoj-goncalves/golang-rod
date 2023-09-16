@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 
@@ -12,7 +13,8 @@ import (
 func main() {
 	go serve()
 
-	browser := rod.New().MustConnect()
+	ctx := context.Background()
+	browser := rod.New().MustConnect(ctx)
 	defer browser.MustClose()
 
 	// Creating a Page Object
