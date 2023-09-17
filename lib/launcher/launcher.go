@@ -499,8 +499,13 @@ func (l *Launcher) Kill() {
 
 // Cleanup wait until the Browser exits and remove UserDataDir
 func (l *Launcher) Cleanup() {
-	<-l.exit
+	l.WaitExit()
 
 	dir := l.Get(flags.UserDataDir)
 	_ = os.RemoveAll(dir)
+}
+
+// Wait until the Browser exists
+func (l *Launcher) WaitExit() {
+	<-l.exit
 }
