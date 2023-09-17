@@ -406,7 +406,7 @@ func (l *Launcher) Launch() (string, error) {
 		if err == nil {
 			return u, nil
 		}
-		cmd = exec.Command(bin, l.FormatArgs()...)
+		cmd = exec.CommandContext(l.ctx, bin, l.FormatArgs()...)
 	}
 
 	l.setupCmd(cmd)
