@@ -426,11 +426,8 @@ func (l *Launcher) Launch() (string, error) {
 	}
 
 	go func() {
-		fmt.Println("Waiting for cmd to exit")
 		_ = cmd.Wait()
-		fmt.Println("Cmd exited")
 		close(l.exit)
-		fmt.Println("Exit channel closed")
 	}()
 
 	u, err := l.getURL()
