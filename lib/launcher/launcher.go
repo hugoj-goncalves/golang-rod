@@ -416,6 +416,8 @@ func (l *Launcher) Launch() (string, error) {
 		return "", err
 	}
 
+	l.afterStartOsSetupCmd(cmd)
+
 	if ll == nil {
 		l.pid = cmd.Process.Pid
 	} else {

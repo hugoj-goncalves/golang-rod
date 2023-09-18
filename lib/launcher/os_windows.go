@@ -1,10 +1,14 @@
-// +build windows
+//go:build windows
 
 package launcher
 
 import (
+	"log"
 	"os/exec"
 	"syscall"
+
+	"github.com/kolesnikovae/go-winjob"
+	"golang.org/x/sys/windows"
 )
 
 func killGroup(pid int) {
@@ -13,7 +17,19 @@ func killGroup(pid int) {
 
 func (l *Launcher) osSetupCmd(cmd *exec.Cmd) {
 	cmd.SysProcAttr = &syscall.SysProcAttr{
-		CreationFlags: syscall.CREATE_NEW_PROCESS_GROUP,
+		CreationFlags: windows.CREATE_SUSPENDED | windows.CREATE_NEW_PROCESS_GROUP,
+	}
+}
+
+func (l *Launcher) afterStartOsSetupCmd(cmd *exec.Cmd) {
+	job, _ := winjob.Create("",
+		winjob.LimitKillOnJobClose,
+		winjob.LimitBreakawayOK)
+	if err := job.Assign(cmd.Process); err != nil {
+		log.Fatal(err)
+	}
+	if err := winjob.ResumeProcess(cmd.Process.Pid); err != nil {
+		log.Fatal(err)
 	}
 }
 
