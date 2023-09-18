@@ -1,4 +1,4 @@
-// +build !windows
+//go:build !windows
 
 package launcher
 
@@ -23,4 +23,7 @@ func (l *Launcher) osSetupCmd(cmd *exec.Cmd) {
 		*cmd = *exec.Command("xvfb-run", command...)
 	}
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+}
+
+func (l *Launcher) afterStartOsSetupCmd(cmd *exec.Cmd) {
 }
