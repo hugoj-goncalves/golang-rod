@@ -502,7 +502,7 @@ func (l *Launcher) Kill() {
 
 // Cleanup wait until the Browser exits and remove UserDataDir
 func (l *Launcher) Cleanup() {
-	l.WaitExit()
+	<-l.exit
 
 	dir := l.Get(flags.UserDataDir)
 	_ = os.RemoveAll(dir)
