@@ -406,7 +406,7 @@ func (l *Launcher) Launch() (string, error) {
 		if err == nil {
 			return u, nil
 		}
-		cmd = exec.Command(bin, l.FormatArgs()...)
+		cmd = exec.CommandContext(l.ctx, bin, l.FormatArgs()...)
 	}
 
 	l.setupCmd(cmd)
@@ -503,4 +503,9 @@ func (l *Launcher) Cleanup() {
 
 	dir := l.Get(flags.UserDataDir)
 	_ = os.RemoveAll(dir)
+}
+
+// Wait until the Browser exists
+func (l *Launcher) WaitExit() {
+	<-l.exit
 }
