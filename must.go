@@ -9,6 +9,7 @@
 package rod
 
 import (
+	"context"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -48,8 +49,8 @@ func (b *Browser) WithPanic(fail func(interface{})) *Browser {
 }
 
 // MustConnect is similar to [Browser.Connect].
-func (b *Browser) MustConnect() *Browser {
-	b.e(b.Connect())
+func (b *Browser) MustConnect(ctx context.Context) *Browser {
+	b.e(b.Connect(ctx))
 	return b
 }
 

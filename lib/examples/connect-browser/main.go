@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/go-rod/rod"
@@ -10,6 +11,7 @@ import (
 
 // To manually launch a browser
 func main() {
+	ctx := context.Background()
 	// Launch your local browser first:
 	//
 	//     chrome --headless --remote-debugging-port=9222
@@ -20,7 +22,7 @@ func main() {
 	//
 	u := launcher.MustResolveURL("")
 
-	browser := rod.New().ControlURL(u).MustConnect()
+	browser := rod.New().ControlURL(u).MustConnect(ctx)
 
 	fmt.Println(
 		browser.MustPage("https://mdn.dev/").MustEval("() => document.title"),

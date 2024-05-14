@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -14,9 +15,10 @@ import (
 
 // This example demonstrates how to upload a file on a form.
 func main() {
+	ctx := context.Background()
 	host := uploadServer()
 
-	page := rod.New().MustConnect().MustPage(host)
+	page := rod.New().MustConnect(ctx).MustPage(host)
 
 	page.MustElement(`input[name="upload"]`).MustSetFiles("./main.go")
 	page.MustElement(`input[name="submit"]`).MustClick()

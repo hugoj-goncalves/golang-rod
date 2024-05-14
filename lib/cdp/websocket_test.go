@@ -78,7 +78,7 @@ func newPage(ctx context.Context, g got.G) (*cdp.Client, string) {
 	l := launcher.New()
 	g.Cleanup(l.Kill)
 
-	client := cdp.New().Start(cdp.MustConnectWS(l.MustLaunch()))
+	client := cdp.New().Start(cdp.MustConnectWS(l.MustLaunch(ctx)))
 
 	go func() {
 		for range client.Event() {
@@ -108,12 +108,13 @@ func newPage(ctx context.Context, g got.G) (*cdp.Client, string) {
 }
 
 func TestDuplicatedConnectErr(t *testing.T) {
+	ctx := context.Background()
 	g := setup(t)
 
 	l := launcher.New()
 	g.Cleanup(l.Kill)
 
-	u := l.MustLaunch()
+	u := l.MustLaunch(ctx)
 
 	ws := &cdp.WebSocket{}
 	g.E(ws.Connect(g.Context(), u, nil))

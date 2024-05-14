@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
@@ -19,7 +20,8 @@ func main() {
 		log.Fatal("usage: go run main.go -- 'This is the phrase to translate to Spanish.'")
 	}
 
-	browser := rod.New().MustConnect()
+	ctx := context.Background()
+	browser := rod.New().MustConnect(ctx)
 
 	page := browser.MustPage("https://translate.google.com/?sl=auto&tl=es&op=translate")
 

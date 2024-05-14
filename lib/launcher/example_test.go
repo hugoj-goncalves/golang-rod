@@ -1,6 +1,7 @@
 package launcher_test
 
 import (
+	"context"
 	"os"
 	"os/exec"
 
@@ -11,16 +12,18 @@ import (
 )
 
 func Example_use_system_browser() {
+	ctx := context.Background()
 	if path, exists := launcher.LookPath(); exists {
-		u := launcher.New().Bin(path).MustLaunch()
-		rod.New().ControlURL(u).MustConnect()
+		u := launcher.New().Bin(path).MustLaunch(ctx)
+		rod.New().ControlURL(u).MustConnect(ctx)
 	}
 }
 
 func Example_print_browser_CLI_output() {
+	ctx := context.Background()
 	// Pipe the browser stderr and stdout to os.Stdout .
-	u := launcher.New().Logger(os.Stdout).MustLaunch()
-	rod.New().ControlURL(u).MustConnect()
+	u := launcher.New().Logger(os.Stdout).MustLaunch(ctx)
+	rod.New().ControlURL(u).MustConnect(ctx)
 }
 
 func Example_custom_launch() {
@@ -42,5 +45,5 @@ func Example_custom_launch() {
 	utils.E(cmd.Start())
 	u := launcher.MustResolveURL(<-parser.URL)
 
-	rod.New().ControlURL(u).MustConnect()
+	rod.New().ControlURL(u).MustConnect(ctx)
 }

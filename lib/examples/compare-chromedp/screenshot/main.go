@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"io/ioutil"
 
 	"github.com/go-rod/rod"
@@ -13,7 +14,8 @@ import (
 // of the entire browser viewport, as well as using `kit`
 // to store it into a file.
 func main() {
-	browser := rod.New().MustConnect()
+	ctx := context.Background()
+	browser := rod.New().MustConnect(ctx)
 
 	// capture screenshot of an element
 	browser.MustPage("https://google.com").MustElement("body div").MustScreenshot("elementScreenshot.png")

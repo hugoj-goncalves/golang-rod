@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -12,13 +13,14 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
 	// get working directory
 	wd, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	browser := rod.New().MustConnect()
+	browser := rod.New().MustConnect(ctx)
 
 	page := browser.MustPage("https://github.com/chromedp/examples")
 

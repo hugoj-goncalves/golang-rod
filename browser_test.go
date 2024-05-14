@@ -1,6 +1,7 @@
 package rod_test
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"net/http"
@@ -161,9 +162,10 @@ func TestBrowserWaitEvent(t *testing.T) {
 }
 
 func TestBrowserCrash(t *testing.T) {
+	ctx := context.Background()
 	g := setup(t)
 
-	browser := rod.New().Context(g.Context()).MustConnect()
+	browser := rod.New().Context(g.Context()).MustConnect(ctx)
 	page := browser.MustPage()
 	js := `() => new Promise(r => setTimeout(r, 10000))`
 
@@ -393,10 +395,11 @@ func TestWaitDownloadFromNewPage(t *testing.T) {
 }
 
 func TestBrowserConnectErr(t *testing.T) {
+	ctx := context.Background()
 	g := setup(t)
 
 	g.Panic(func() {
-		rod.New().ControlURL(g.RandStr(16)).MustConnect()
+		rod.New().ControlURL(g.RandStr(16)).MustConnect(ctx)
 	})
 }
 
@@ -429,19 +432,21 @@ func TestStreamReader(t *testing.T) {
 }
 
 func TestBrowserConnectFailure(t *testing.T) {
+	ctx := context.Background()
 	g := setup(t)
 
 	c := g.Context()
 	c.Cancel()
-	err := rod.New().Context(c).Connect()
+	err := rod.New().Context(c).Connect(ctx)
 	if err == nil {
 		g.Fatal("expected an error on connect failure")
 	}
 }
 
 func TestBrowserPool(_ *testing.T) {
+	ctx := context.Background()
 	pool := rod.NewBrowserPool(3)
-	create := func() *rod.Browser { return rod.New().MustConnect() }
+	create := func() *rod.Browser { return rod.New().MustConnect(ctx) }
 	b := pool.Get(create)
 	pool.Put(b)
 	pool.Cleanup(func(p *rod.Browser) {
@@ -450,11 +455,13 @@ func TestBrowserPool(_ *testing.T) {
 }
 
 func TestOldBrowser(t *testing.T) {
+	ctx := context.Background()
+
 	t.Skip()
 
 	g := setup(t)
-	u := launcher.New().Revision(686378).MustLaunch()
-	b := rod.New().ControlURL(u).MustConnect()
+	u := launcher.New().Revision(686378).MustLaunch(ctx)
+	b := rod.New().ControlURL(u).MustConnect(ctx)
 	g.Cleanup(b.MustClose)
 	res, err := proto.BrowserGetVersion{}.Call(b)
 	g.E(err)
@@ -462,10 +469,12 @@ func TestOldBrowser(t *testing.T) {
 }
 
 func TestBrowserLostConnection(t *testing.T) {
+	ctx := context.Background()
+
 	g := setup(t)
 
 	l := launcher.New()
-	p := rod.New().ControlURL(l.MustLaunch()).MustConnect().MustPage(g.blank())
+	p := rod.New().ControlURL(l.MustLaunch(ctx)).MustConnect(ctx).MustPage(g.blank())
 
 	go func() {
 		utils.Sleep(1)
@@ -477,8 +486,9 @@ func TestBrowserLostConnection(t *testing.T) {
 }
 
 func TestBrowserConnectConflict(t *testing.T) {
+	ctx := context.Background()
 	g := setup(t)
 	g.Panic(func() {
-		rod.New().Client(&cdp.Client{}).ControlURL("test").MustConnect()
+		rod.New().Client(&cdp.Client{}).ControlURL("test").MustConnect(ctx)
 	})
 }

@@ -14,11 +14,12 @@ import (
 )
 
 func main() {
-	w := NewWebSocket(launcher.New().MustLaunch())
+	ctx := context.Background()
+	w := NewWebSocket(launcher.New().MustLaunch(ctx))
 
 	client := cdp.New().Start(w)
 
-	p := rod.New().Client(client).MustConnect().MustPage("http://example.com")
+	p := rod.New().Client(client).MustConnect(ctx).MustPage("http://example.com")
 
 	fmt.Println(p.MustInfo().Title)
 }

@@ -3,6 +3,7 @@ package launcher_test
 import (
 	"archive/zip"
 	"bytes"
+	"context"
 	"crypto"
 	"crypto/x509"
 	"encoding/pem"
@@ -68,7 +69,8 @@ func TestLaunch(t *testing.T) {
 	l := launcher.New()
 	defer l.Kill()
 
-	u := l.MustLaunch()
+	ctx := context.Background()
+	u := l.MustLaunch(ctx)
 	g.Regex(`\Aws://.+\z`, u)
 
 	parsed, _ := url.Parse(u)
@@ -139,18 +141,20 @@ func TestLaunchUserMode(t *testing.T) {
 		"about:blank",
 	})
 
-	url := l.MustLaunch()
+	ctx := context.Background()
+	url := l.MustLaunch(ctx)
 
-	g.Eq(url, launcher.NewUserMode().RemoteDebuggingPort(port).MustLaunch())
+	g.Eq(url, launcher.NewUserMode().RemoteDebuggingPort(port).MustLaunch(ctx))
 }
 
 func TestUserModeErr(t *testing.T) {
+	ctx := context.Background()
 	g := setup(t)
 
-	_, err := launcher.NewUserMode().RemoteDebuggingPort(48277).Bin("not-exists").Launch()
+	_, err := launcher.NewUserMode().RemoteDebuggingPort(48277).Bin("not-exists").Launch(ctx)
 	g.Err(err)
 
-	_, err = launcher.NewUserMode().RemoteDebuggingPort(58217).Bin("echo").Launch()
+	_, err = launcher.NewUserMode().RemoteDebuggingPort(58217).Bin("echo").Launch(ctx)
 	g.Err(err)
 }
 
@@ -170,20 +174,21 @@ func TestGetWebSocketDebuggerURLErr(t *testing.T) {
 }
 
 func TestLaunchErr(t *testing.T) {
+	ctx := context.Background()
 	g := setup(t)
 
 	g.Panic(func() {
-		launcher.New().Bin("not-exists").MustLaunch()
+		launcher.New().Bin("not-exists").MustLaunch(ctx)
 	})
 	g.Panic(func() {
-		launcher.New().Headless(false).Bin("not-exists").MustLaunch()
+		launcher.New().Headless(false).Bin("not-exists").MustLaunch(ctx)
 	})
 	g.Panic(func() {
 		launcher.New().ClientHeader()
 	})
 	{
 		l := launcher.New().XVFB()
-		_, _ = l.Launch()
+		_, _ = l.Launch(ctx)
 		l.Kill()
 	}
 }
@@ -200,7 +205,8 @@ func TestProfileDir(t *testing.T) {
 		g.Skip("It's not CI friendly, so we skip it!")
 	}
 
-	url.MustLaunch()
+	ctx := context.Background()
+	url.MustLaunch(ctx)
 
 	userDataDir := url.Get(flags.UserDataDir)
 	file, err := os.Stat(filepath.Join(userDataDir, "test-profile-dir"))
@@ -312,15 +318,16 @@ func TestBrowserDownloadErr(t *testing.T) {
 }
 
 func TestLaunchMultiTimes(t *testing.T) {
+	ctx := context.Background()
 	g := setup(t)
 
 	// first time launch, success.
 	l := launcher.New()
-	u, e := l.Launch()
+	u, e := l.Launch(ctx)
 	g.Neq(u, "")
 	g.E(e)
 
 	// second time launch, failed with ErrAlreadyLaunched.
-	_, e = l.Launch()
+	_, e = l.Launch(ctx)
 	g.Eq(e, launcher.ErrAlreadyLaunched)
 }

@@ -26,7 +26,7 @@ func TestBasic(t *testing.T) {
 
 	ctx := g.Context()
 
-	client := cdp.New().Logger(defaults.CDP).Start(cdp.MustConnectWS(launcher.New().MustLaunch()))
+	client := cdp.New().Logger(defaults.CDP).Start(cdp.MustConnectWS(launcher.New().MustLaunch(ctx)))
 
 	defer func() {
 		_, _ = client.Call(ctx, "", "Browser.close", nil)
@@ -136,7 +136,7 @@ func TestCrash(t *testing.T) {
 
 	ctx := g.Context()
 
-	client := cdp.MustStartWithURL(ctx, launcher.New().MustLaunch(), nil)
+	client := cdp.MustStartWithURL(ctx, launcher.New().MustLaunch(ctx), nil)
 
 	go func() {
 		for range client.Event() {
@@ -328,6 +328,7 @@ func TestConcurrentCall(t *testing.T) {
 }
 
 func TestMassBrowserClose(t *testing.T) {
+	ctx := context.Background()
 	t.Skip()
 
 	g := setup(t)
@@ -336,7 +337,7 @@ func TestMassBrowserClose(t *testing.T) {
 	for i := 0; i < 50; i++ {
 		t.Run(fmt.Sprintf("%d", i), func(t *testing.T) {
 			t.Parallel()
-			browser := rod.New().MustConnect()
+			browser := rod.New().MustConnect(ctx)
 			browser.MustPage(s.URL()).MustWaitLoad().MustClose()
 			browser.MustClose()
 		})

@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"encoding/base64"
 	"fmt"
 	"io/ioutil"
@@ -18,11 +19,12 @@ import (
 // For example, when you log into your github account, and you want to reuse the login session for automation task.
 // You can use this example to achieve such functionality. Rod will be just like your browser extension.
 func main() {
+	ctx := context.Background()
 	// Make sure you have closed your browser completely, UserMode can't control a browser that is not launched by it.
 	// Launches a new browser with the "new user mode" option, and returns the URL to control that browser.
-	wsURL := launcher.NewUserMode().MustLaunch()
+	wsURL := launcher.NewUserMode().MustLaunch(ctx)
 
-	browser := rod.New().ControlURL(wsURL).MustConnect().NoDefaultDevice()
+	browser := rod.New().ControlURL(wsURL).MustConnect(ctx).NoDefaultDevice()
 
 	// Run a extension. Here we created a link previewer extension as an example.
 	// With this extension, whenever you hover on a link a preview of the linked page will popup.
@@ -34,8 +36,9 @@ func main() {
 }
 
 func linkPreviewer(browser *rod.Browser) {
+	ctx := context.Background()
 	// Create a headless browser to generate preview of links on background.
-	previewer := rod.New().MustConnect()
+	previewer := rod.New().MustConnect(ctx)
 	previewer.MustSetCookies(browser.MustGetCookies()...) // share cookies
 	pool := rod.NewPagePool(5)
 	create := func() *rod.Page { return previewer.MustPage() }

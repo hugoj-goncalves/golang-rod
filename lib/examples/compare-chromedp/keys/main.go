@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net"
@@ -13,7 +14,8 @@ import (
 
 // This example demonstrates how to send key events to an element.
 func main() {
-	page := rod.New().MustConnect().MustPage(testServer())
+	ctx := context.Background()
+	page := rod.New().MustConnect(ctx).MustPage(testServer())
 
 	val1 := page.MustElement("#input1").MustText()
 	// cSpell:ignore naoeu

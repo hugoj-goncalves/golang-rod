@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"log"
@@ -15,6 +16,7 @@ import (
 )
 
 func main() {
+	ctx := context.Background()
 	// create a test server to serve the page
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, _ = fmt.Fprint(w, `
@@ -37,7 +39,7 @@ func main() {
 	}))
 	defer ts.Close()
 
-	page := rod.New().MustConnect().MustPage(ts.URL)
+	page := rod.New().MustConnect(ctx).MustPage(ts.URL)
 
 	node, err := page.MustElement("body").Describe(-1, true)
 	if err != nil {
